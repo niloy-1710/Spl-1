@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "MinHeap.h"
 
 Graph::Graph() : n(0) {}
 
@@ -24,6 +25,7 @@ void Graph::setRoadStatus(int u, int v, bool open) {
     }
 }
 
+// dijkstra using custom min-heap
 void Graph::dijkstra(int src, int dest) {
     if (src < 0 || src >= n || dest < 0 || dest >= n) {
         cout << "Invalid location ID.\n";
@@ -34,24 +36,29 @@ void Graph::dijkstra(int src, int dest) {
     vector<int> parent(n, -1);
     vector<bool> visited(n, false);
 
+    MinHeap pq;
     dist[src] = 0;
+    pq.push(src, 0);
 
-    for (int i = 0; i < n; i++) {
-        int u = -1;
-        for (int j = 0; j < n; j++) {
-            if (!visited[j] && (u == -1 || dist[j] < dist[u]))
-                u = j;
-        }
+    while (!pq.empty()) {
+        HeapNode cur = pq.pop();
+        int u = cur.vertex;
 
-        if (u == -1 || dist[u] == INT_MAX) break;
+        if (visited[u]) continue;
         visited[u] = true;
+
         if (u == dest) break;
 
         for (auto &e : adj[u]) {
             if (!e.isOpen) continue; // skip blocked roads
-            if (dist[u] + e.weight < dist[e.to]) {
-                dist[e.to] = dist[u] + e.weight;
-                parent[e.to] = u;
+
+            int v = e.to;
+            int w = e.weight;
+
+            if (!visited[v] && dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+                parent[v] = u;
+                pq.push(v, dist[v]);
             }
         }
     }
