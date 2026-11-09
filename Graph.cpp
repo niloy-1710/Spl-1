@@ -3,10 +3,11 @@
 
 Graph::Graph() : n(0) {}
 
-int Graph::addLocation(string name) {
-    names.push_back(name);
+int Graph::addLocation(string name, double x, double y) {
+    int id = n++;
+    locations.push_back(Location(id, name, x, y));
     adj.push_back({});
-    return n++;
+    return id;
 }
 
 void Graph::addRoad(int u, int v, int weight, bool open) {
@@ -64,7 +65,7 @@ void Graph::dijkstra(int src, int dest) {
     }
 
     if (dist[dest] == INT_MAX) {
-        cout << "No path found between " << names[src] << " and " << names[dest] << "\n";
+        cout << "No path found between " << locations[src].name << " and " << locations[dest].name << "\n";
         return;
     }
 
@@ -74,14 +75,16 @@ void Graph::dijkstra(int src, int dest) {
         path.push_back(curr);
 
     for (int i = path.size() - 1; i >= 0; i--) {
-        cout << names[path[i]] << (i > 0 ? " -> " : "\n");
+        cout << locations[path[i]].name << (i > 0 ? " -> " : "\n");
     }
 }
 
 void Graph::showLocations() {
     cout << "\nLocations:\n";
-    for (int i = 0; i < n; i++)
-        cout << i << ": " << names[i] << "\n";
+    for (int i = 0; i < n; i++) {
+        cout << i << ": " << locations[i].name 
+             << " (" << locations[i].x << ", " << locations[i].y << ")\n";
+    }
 }
 
 void Graph::showRoads() {
@@ -89,7 +92,7 @@ void Graph::showRoads() {
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
             if (u < e.to) {
-                cout << names[u] << " <-> " << names[e.to] 
+                cout << locations[u].name << " <-> " << locations[e.to].name 
                      << " (" << e.weight << " km) [" 
                      << (e.isOpen ? "OPEN" : "BLOCKED") << "]\n";
             }
@@ -105,7 +108,9 @@ void Graph::saveFile(string filename) {
     }
 
     out << n << "\n";
-    for (int i = 0; i < n; i++) out << names[i] << "\n";
+    for (int i = 0; i < n; i++) {
+        out << locations[i].name << " " << locations[i].x << " " << locations[i].y << "\n";
+    }
 
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
@@ -124,9 +129,15 @@ void Graph::loadFile(string filename) {
     }
 
     in >> n;
-    names.resize(n);
+    locations.clear();
     adj.assign(n, {});
-    for (int i = 0; i < n; i++) in >> names[i];
+
+    for (int i = 0; i < n; i++) {
+        string name;
+        double x, y;
+        in >> name >> x >> y;
+        locations.push_back(Location(i, name, x, y));
+    }
 
     int u, v, w, open;
     while (in >> u >> v >> w >> open) {
@@ -139,7 +150,7 @@ int Graph::getLocationCount() {
     return n;
 }
 
-string Graph::getLocationName(int id) {
-    if (id >= 0 && id < n) return names[id];
-    return "";
+Location Graph::getLocation(int id) {
+    if (id >= 0 && id < n) return locations[id];
+    return Location();
 }

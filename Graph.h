@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <climits>
+#include "Location.h"
 
 using namespace std;
 
@@ -18,13 +19,13 @@ struct Edge {
 class Graph {
 private:
     int n;
-    vector<string> names;
+    vector<Location> locations;
     vector<vector<Edge>> adj;
 
 public:
     Graph();
 
-    int addLocation(string name);
+    int addLocation(string name, double x = 0.0, double y = 0.0);
     void addRoad(int u, int v, int weight, bool open = true);
     void setRoadStatus(int u, int v, bool open);
     void dijkstra(int src, int dest);
@@ -33,8 +34,7 @@ public:
     void saveFile(string filename);
     void loadFile(string filename);
     int getLocationCount();
-    string getLocationName(int id);
+    Location getLocation(int id);
 };
 
 #endif
-

@@ -3,12 +3,12 @@
 int main() {
     Graph g;
 
-    // default Dhaka University landmarks
-    g.addLocation("IIT");
-    g.addLocation("Curzon");
-    g.addLocation("TSC");
-    g.addLocation("Central_Library");
-    g.addLocation("Shaheed_Minar");
+    // Dhaka University landmarks with coordinates for visual map
+    g.addLocation("IIT", 250, 300);
+    g.addLocation("Curzon", 380, 200);
+    g.addLocation("TSC", 150, 120);
+    g.addLocation("Central_Library", 200, 180);
+    g.addLocation("Shaheed_Minar", 300, 260);
 
     g.addRoad(0, 1, 4); // IIT - Curzon
     g.addRoad(0, 4, 3); // IIT - Shaheed Minar

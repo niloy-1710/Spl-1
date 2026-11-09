@@ -1,13 +1,12 @@
 5
-IIT
-Curzon
-TSC
-Central_Library
-Shaheed_Minar
+IIT 250 300
+Curzon 380 200
+TSC 150 120
+Central_Library 200 180
+Shaheed_Minar 300 260
 0 1 4 1
 0 4 3 1
 1 4 2 1
 4 3 5 1
 3 2 2 1
 1 2 8 1
-
