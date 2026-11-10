@@ -20,7 +20,17 @@ int main() {
 
     int choice;
     while (true) {
-        cout << "\n1. Locations  2. Roads  3. Shortest Route  4. Block/Open Road  5. Save  6. Load  0. Exit\nChoice: ";
+        cout << "\n==============================\n";
+        cout << "1. View Locations\n";
+        cout << "2. View Roads\n";
+        cout << "3. Shortest Route (Dijkstra)\n";
+        cout << "4. Shortest Route (A* Search)\n";
+        cout << "5. Compare Dijkstra vs A*\n";
+        cout << "6. Block/Open Road\n";
+        cout << "7. Save Map to File\n";
+        cout << "8. Load Map from File\n";
+        cout << "0. Exit\n";
+        cout << "Choice: ";
         if (!(cin >> choice) || choice == 0) break;
 
         if (choice == 1) {
@@ -33,13 +43,23 @@ int main() {
             cin >> s >> d;
             g.dijkstra(s, d);
         } else if (choice == 4) {
+            int s, d;
+            cout << "Enter start and destination ID: ";
+            cin >> s >> d;
+            g.aStar(s, d);
+        } else if (choice == 5) {
+            int s, d;
+            cout << "Enter start and destination ID: ";
+            cin >> s >> d;
+            g.compareAlgorithms(s, d);
+        } else if (choice == 6) {
             int u, v, status;
             cout << "Enter u, v and status (1: open, 0: close): ";
             cin >> u >> v >> status;
             g.setRoadStatus(u, v, status == 1);
-        } else if (choice == 5) {
+        } else if (choice == 7) {
             g.saveFile("map.txt");
-        } else if (choice == 6) {
+        } else if (choice == 8) {
             g.loadFile("map.txt");
         }
     }

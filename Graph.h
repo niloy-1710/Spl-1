@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <cmath>
 #include "Location.h"
 
 using namespace std;
@@ -25,6 +26,8 @@ private:
     vector<Location> locations;
     vector<vector<Edge>> adj;
 
+    double heuristic(int u, int target);
+
 public:
     Graph();
 
@@ -32,7 +35,12 @@ public:
     int addLocation(string name, double x = 0.0, double y = 0.0);
     void addRoad(int u, int v, double weight, double speedLimit = 30.0, bool isOneWay = false, bool open = true);
     void setRoadStatus(int u, int v, bool open);
+    
+    // Shortest path algorithms
     void dijkstra(int src, int dest);
+    void aStar(int src, int dest);
+    void compareAlgorithms(int src, int dest);
+
     void showLocations();
     void showRoads();
     bool saveFile(string filename);
