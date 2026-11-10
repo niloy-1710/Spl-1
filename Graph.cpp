@@ -16,10 +16,12 @@ int Graph::addLocation(string name, double x, double y) {
     return id;
 }
 
-void Graph::addRoad(int u, int v, double weight, bool open) {
+void Graph::addRoad(int u, int v, double weight, double speedLimit, bool isOneWay, bool open) {
     if (u < 0 || u >= n || v < 0 || v >= n) return;
-    adj[u].push_back({v, weight, open});
-    adj[v].push_back({u, weight, open});
+    adj[u].push_back({v, weight, speedLimit, isOneWay, open});
+    if (!isOneWay) {
+        adj[v].push_back({u, weight, speedLimit, false, open});
+    }
 }
 
 void Graph::setRoadStatus(int u, int v, bool open) {
@@ -28,11 +30,11 @@ void Graph::setRoadStatus(int u, int v, bool open) {
         if (e.to == v) e.isOpen = open;
     }
     for (auto &e : adj[v]) {
-        if (e.to == u) e.isOpen = open;
+        if (e.to == u && !e.isOneWay) e.isOpen = open;
     }
 }
 
-// dijkstra using custom min-heap with double distances
+// dijkstra shortest path
 void Graph::dijkstra(int src, int dest) {
     if (src < 0 || src >= n || dest < 0 || dest >= n) {
         cout << "Invalid location ID.\n";
@@ -98,9 +100,16 @@ void Graph::showRoads() {
     cout << "\nRoads:\n";
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
-            if (u < e.to) {
+            // print one-way or only print two-way once (u < e.to)
+            if (e.isOneWay) {
+                cout << locations[u].name << " -> " << locations[e.to].name 
+                     << " [One-Way, " << fixed << setprecision(1) << e.weight << " km, " 
+                     << (int)e.speedLimit << " km/h] [" 
+                     << (e.isOpen ? "OPEN" : "BLOCKED") << "]\n";
+            } else if (u < e.to) {
                 cout << locations[u].name << " <-> " << locations[e.to].name 
-                     << " (" << fixed << setprecision(2) << e.weight << " km) [" 
+                     << " [Two-Way, " << fixed << setprecision(1) << e.weight << " km, " 
+                     << (int)e.speedLimit << " km/h] [" 
                      << (e.isOpen ? "OPEN" : "BLOCKED") << "]\n";
             }
         }
@@ -120,11 +129,10 @@ bool Graph::saveFile(string filename) {
         out << locations[i].name << " " << locations[i].x << " " << locations[i].y << "\n";
     }
 
-    // count unique roads
     int roadCount = 0;
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
-            if (u < e.to) roadCount++;
+            if (e.isOneWay || u < e.to) roadCount++;
         }
     }
 
@@ -132,8 +140,10 @@ bool Graph::saveFile(string filename) {
     out << roadCount << "\n";
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
-            if (u < e.to) {
-                out << u << " " << e.to << " " << e.weight << " " << (e.isOpen ? 1 : 0) << "\n";
+            if (e.isOneWay || u < e.to) {
+                out << u << " " << e.to << " " << e.weight << " " 
+                    << e.speedLimit << " " << (e.isOneWay ? 1 : 0) << " " 
+                    << (e.isOpen ? 1 : 0) << "\n";
             }
         }
     }
@@ -167,10 +177,10 @@ bool Graph::loadFile(string filename) {
             int roadCount;
             if (!(in >> roadCount)) break;
             for (int i = 0; i < roadCount; i++) {
-                int u, v, open;
-                double w;
-                in >> u >> v >> w >> open;
-                addRoad(u, v, w, open == 1);
+                int u, v, oneWay, open;
+                double w, speed;
+                in >> u >> v >> w >> speed >> oneWay >> open;
+                addRoad(u, v, w, speed, oneWay == 1, open == 1);
             }
         }
     }

@@ -10,13 +10,13 @@ int main() {
     g.addLocation("Central_Library", 200, 180);
     g.addLocation("Shaheed_Minar", 300, 260);
 
-    // Distances in kilometers
-    g.addRoad(0, 1, 0.4); // IIT - Curzon
-    g.addRoad(0, 4, 0.5); // IIT - Shaheed Minar
-    g.addRoad(1, 4, 0.3); // Curzon - Shaheed Minar
-    g.addRoad(4, 3, 0.7); // Shaheed Minar - Central Library
-    g.addRoad(3, 2, 0.4); // Central Library - TSC
-    g.addRoad(1, 2, 1.2); // Curzon - TSC
+    // Roads: u, v, distance (km), speedLimit (km/h), isOneWay
+    g.addRoad(0, 1, 0.4, 40, false); // IIT <-> Curzon (Two-Way, 40 km/h)
+    g.addRoad(0, 4, 0.5, 35, false); // IIT <-> Shaheed Minar (Two-Way, 35 km/h)
+    g.addRoad(1, 4, 0.3, 30, false); // Curzon <-> Shaheed Minar (Two-Way, 30 km/h)
+    g.addRoad(1, 2, 1.2, 50, false); // Curzon <-> TSC (Two-Way, 50 km/h)
+    g.addRoad(2, 3, 0.4, 25, false); // TSC <-> Central Library (Two-Way, 25 km/h)
+    g.addRoad(4, 3, 0.7, 30, true);  // Shaheed Minar -> Central Library (One-Way, 30 km/h)
 
     int choice;
     while (true) {
