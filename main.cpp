@@ -3,19 +3,20 @@
 int main() {
     Graph g;
 
-    // Dhaka University landmarks with coordinates for visual map
+    // Dhaka University landmarks with coordinates
     g.addLocation("IIT", 250, 300);
     g.addLocation("Curzon", 380, 200);
     g.addLocation("TSC", 150, 120);
     g.addLocation("Central_Library", 200, 180);
     g.addLocation("Shaheed_Minar", 300, 260);
 
-    g.addRoad(0, 1, 4); // IIT - Curzon
-    g.addRoad(0, 4, 3); // IIT - Shaheed Minar
-    g.addRoad(1, 4, 2); // Curzon - Shaheed Minar
-    g.addRoad(4, 3, 5); // Shaheed Minar - Central Library
-    g.addRoad(3, 2, 2); // Central Library - TSC
-    g.addRoad(1, 2, 8); // Curzon - TSC
+    // Distances in kilometers
+    g.addRoad(0, 1, 0.4); // IIT - Curzon
+    g.addRoad(0, 4, 0.5); // IIT - Shaheed Minar
+    g.addRoad(1, 4, 0.3); // Curzon - Shaheed Minar
+    g.addRoad(4, 3, 0.7); // Shaheed Minar - Central Library
+    g.addRoad(3, 2, 0.4); // Central Library - TSC
+    g.addRoad(1, 2, 1.2); // Curzon - TSC
 
     int choice;
     while (true) {

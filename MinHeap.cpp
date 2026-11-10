@@ -39,13 +39,13 @@ bool MinHeap::empty() const {
     return heap.empty();
 }
 
-void MinHeap::push(int vertex, int dist) {
+void MinHeap::push(int vertex, double dist) {
     heap.push_back({vertex, dist});
     heapifyUp(heap.size() - 1);
 }
 
 HeapNode MinHeap::pop() {
-    if (heap.empty()) return {-1, INT_MAX};
+    if (heap.empty()) return {-1, INF};
     HeapNode top = heap[0];
     heap[0] = heap.back();
     heap.pop_back();
@@ -54,4 +54,3 @@ HeapNode MinHeap::pop() {
     }
     return top;
 }
-

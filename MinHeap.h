@@ -7,9 +7,11 @@
 
 using namespace std;
 
+const double INF = 1e9;
+
 struct HeapNode {
     int vertex;
-    int dist;
+    double dist;
 };
 
 class MinHeap {
@@ -22,9 +24,8 @@ private:
 public:
     MinHeap();
     bool empty() const;
-    void push(int vertex, int dist);
+    void push(int vertex, double dist);
     HeapNode pop();
 };
 
 #endif
-

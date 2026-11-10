@@ -1,0 +1,8 @@
+{
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && g++ -std=c++17 main.cpp Graph.cpp MinHeap.cpp -o main.exe && .\\main.exe"
+    },
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true
+}
+

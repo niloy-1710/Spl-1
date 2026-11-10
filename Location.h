@@ -18,3 +18,4 @@ struct Location {
 };
 
 #endif
+

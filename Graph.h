@@ -5,14 +5,15 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <climits>
+#include <sstream>
+#include <iomanip>
 #include "Location.h"
 
 using namespace std;
 
 struct Edge {
     int to;
-    int weight;
+    double weight; // distance in km
     bool isOpen;
 };
 
@@ -25,14 +26,15 @@ private:
 public:
     Graph();
 
+    void clear();
     int addLocation(string name, double x = 0.0, double y = 0.0);
-    void addRoad(int u, int v, int weight, bool open = true);
+    void addRoad(int u, int v, double weight, bool open = true);
     void setRoadStatus(int u, int v, bool open);
     void dijkstra(int src, int dest);
     void showLocations();
     void showRoads();
-    void saveFile(string filename);
-    void loadFile(string filename);
+    bool saveFile(string filename);
+    bool loadFile(string filename);
     int getLocationCount();
     Location getLocation(int id);
 };

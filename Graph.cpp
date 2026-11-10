@@ -3,6 +3,12 @@
 
 Graph::Graph() : n(0) {}
 
+void Graph::clear() {
+    n = 0;
+    locations.clear();
+    adj.clear();
+}
+
 int Graph::addLocation(string name, double x, double y) {
     int id = n++;
     locations.push_back(Location(id, name, x, y));
@@ -10,7 +16,7 @@ int Graph::addLocation(string name, double x, double y) {
     return id;
 }
 
-void Graph::addRoad(int u, int v, int weight, bool open) {
+void Graph::addRoad(int u, int v, double weight, bool open) {
     if (u < 0 || u >= n || v < 0 || v >= n) return;
     adj[u].push_back({v, weight, open});
     adj[v].push_back({u, weight, open});
@@ -26,20 +32,20 @@ void Graph::setRoadStatus(int u, int v, bool open) {
     }
 }
 
-// dijkstra using custom min-heap
+// dijkstra using custom min-heap with double distances
 void Graph::dijkstra(int src, int dest) {
     if (src < 0 || src >= n || dest < 0 || dest >= n) {
         cout << "Invalid location ID.\n";
         return;
     }
 
-    vector<int> dist(n, INT_MAX);
+    vector<double> dist(n, INF);
     vector<int> parent(n, -1);
     vector<bool> visited(n, false);
 
     MinHeap pq;
-    dist[src] = 0;
-    pq.push(src, 0);
+    dist[src] = 0.0;
+    pq.push(src, 0.0);
 
     while (!pq.empty()) {
         HeapNode cur = pq.pop();
@@ -54,7 +60,7 @@ void Graph::dijkstra(int src, int dest) {
             if (!e.isOpen) continue; // skip blocked roads
 
             int v = e.to;
-            int w = e.weight;
+            double w = e.weight;
 
             if (!visited[v] && dist[u] + w < dist[v]) {
                 dist[v] = dist[u] + w;
@@ -64,11 +70,12 @@ void Graph::dijkstra(int src, int dest) {
         }
     }
 
-    if (dist[dest] == INT_MAX) {
-        cout << "No path found between " << locations[src].name << " and " << locations[dest].name << "\n";
+    if (dist[dest] >= INF) {
+        cout << "No active path found between " << locations[src].name << " and " << locations[dest].name << "\n";
         return;
     }
 
+    cout << fixed << setprecision(2);
     cout << "Shortest distance: " << dist[dest] << " km\nRoute: ";
     vector<int> path;
     for (int curr = dest; curr != -1; curr = parent[curr])
@@ -93,57 +100,84 @@ void Graph::showRoads() {
         for (auto &e : adj[u]) {
             if (u < e.to) {
                 cout << locations[u].name << " <-> " << locations[e.to].name 
-                     << " (" << e.weight << " km) [" 
+                     << " (" << fixed << setprecision(2) << e.weight << " km) [" 
                      << (e.isOpen ? "OPEN" : "BLOCKED") << "]\n";
             }
         }
     }
 }
 
-void Graph::saveFile(string filename) {
+bool Graph::saveFile(string filename) {
     ofstream out(filename);
     if (!out) {
-        cout << "Could not open file for writing.\n";
-        return;
+        cout << "Error: could not open " << filename << " for saving.\n";
+        return false;
     }
 
+    out << "[LOCATIONS]\n";
     out << n << "\n";
     for (int i = 0; i < n; i++) {
         out << locations[i].name << " " << locations[i].x << " " << locations[i].y << "\n";
     }
 
+    // count unique roads
+    int roadCount = 0;
     for (int u = 0; u < n; u++) {
         for (auto &e : adj[u]) {
-            if (u < e.to)
-                out << u << " " << e.to << " " << e.weight << " " << e.isOpen << "\n";
+            if (u < e.to) roadCount++;
         }
     }
-    cout << "Saved to " << filename << "\n";
+
+    out << "[ROADS]\n";
+    out << roadCount << "\n";
+    for (int u = 0; u < n; u++) {
+        for (auto &e : adj[u]) {
+            if (u < e.to) {
+                out << u << " " << e.to << " " << e.weight << " " << (e.isOpen ? 1 : 0) << "\n";
+            }
+        }
+    }
+
+    out.close();
+    cout << "Map saved to " << filename << " successfully.\n";
+    return true;
 }
 
-void Graph::loadFile(string filename) {
+bool Graph::loadFile(string filename) {
     ifstream in(filename);
     if (!in) {
-        cout << "File not found.\n";
-        return;
+        cout << "Error: file " << filename << " not found.\n";
+        return false;
     }
 
-    in >> n;
-    locations.clear();
-    adj.assign(n, {});
+    string line;
+    clear();
 
-    for (int i = 0; i < n; i++) {
-        string name;
-        double x, y;
-        in >> name >> x >> y;
-        locations.push_back(Location(i, name, x, y));
+    while (getline(in, line)) {
+        if (line == "[LOCATIONS]") {
+            int locCount;
+            if (!(in >> locCount)) break;
+            for (int i = 0; i < locCount; i++) {
+                string name;
+                double x, y;
+                in >> name >> x >> y;
+                addLocation(name, x, y);
+            }
+        } else if (line == "[ROADS]") {
+            int roadCount;
+            if (!(in >> roadCount)) break;
+            for (int i = 0; i < roadCount; i++) {
+                int u, v, open;
+                double w;
+                in >> u >> v >> w >> open;
+                addRoad(u, v, w, open == 1);
+            }
+        }
     }
 
-    int u, v, w, open;
-    while (in >> u >> v >> w >> open) {
-        addRoad(u, v, w, open);
-    }
-    cout << "Loaded from " << filename << "\n";
+    in.close();
+    cout << "Loaded map with " << n << " locations from " << filename << "\n";
+    return true;
 }
 
 int Graph::getLocationCount() {
