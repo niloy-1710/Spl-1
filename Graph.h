@@ -20,6 +20,23 @@ struct Edge {
     bool isOpen;       // false if blocked
 };
 
+struct RouteSegment {
+    int from;
+    int to;
+    double distance;
+    double speedLimit;
+    double timeMinutes;
+};
+
+struct RouteResult {
+    bool reachable;
+    double totalDistance;
+    double totalTimeMinutes;
+    vector<int> path;
+    vector<RouteSegment> segments;
+    int nodesExplored;
+};
+
 class Graph {
 private:
     int n;
@@ -27,6 +44,7 @@ private:
     vector<vector<Edge>> adj;
 
     double heuristic(int u, int target);
+    void printRouteSummary(const RouteResult& res, const string& algoName);
 
 public:
     Graph();
@@ -36,9 +54,9 @@ public:
     void addRoad(int u, int v, double weight, double speedLimit = 30.0, bool isOneWay = false, bool open = true);
     void setRoadStatus(int u, int v, bool open);
     
-    // Shortest path algorithms
-    void dijkstra(int src, int dest);
-    void aStar(int src, int dest);
+    // Shortest path algorithms with ETA
+    RouteResult dijkstra(int src, int dest, bool display = true);
+    RouteResult aStar(int src, int dest, bool display = true);
     void compareAlgorithms(int src, int dest);
 
     void showLocations();

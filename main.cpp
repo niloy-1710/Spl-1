@@ -20,13 +20,15 @@ int main() {
 
     int choice;
     while (true) {
-        cout << "\n==============================\n";
+        cout << "\n=========================================\n";
+        cout << "      MAP NAVIGATION SYSTEM (SPL-1)      \n";
+        cout << "=========================================\n";
         cout << "1. View Locations\n";
-        cout << "2. View Roads\n";
-        cout << "3. Shortest Route (Dijkstra)\n";
-        cout << "4. Shortest Route (A* Search)\n";
+        cout << "2. View Roads & Speed Limits\n";
+        cout << "3. Shortest Route & ETA (Dijkstra)\n";
+        cout << "4. Shortest Route & ETA (A* Search)\n";
         cout << "5. Compare Dijkstra vs A*\n";
-        cout << "6. Block/Open Road\n";
+        cout << "6. Toggle Road Status (Open / Block)\n";
         cout << "7. Save Map to File\n";
         cout << "8. Load Map from File\n";
         cout << "0. Exit\n";
