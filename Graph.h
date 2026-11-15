@@ -70,6 +70,7 @@ public:
 
     void showLocations();
     void showRoads();
+    void showVisualMap(const vector<int>& highlightPath = {});
     bool saveFile(string filename);
     bool loadFile(string filename);
     

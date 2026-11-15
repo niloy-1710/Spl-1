@@ -260,6 +260,88 @@ void Graph::compareAlgorithms(int src, int dest) {
     cout << "========================================================\n";
 }
 
+void Graph::showVisualMap(const vector<int>& highlightPath) {
+    if (n == 0) {
+        cout << "Map is empty.\n";
+        return;
+    }
+
+    const int WIDTH = 70;
+    const int HEIGHT = 22;
+    vector<string> grid(HEIGHT, string(WIDTH, ' '));
+
+    double minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+    for (const auto& loc : locations) {
+        if (loc.x < minX) minX = loc.x;
+        if (loc.x > maxX) maxX = loc.x;
+        if (loc.y < minY) minY = loc.y;
+        if (loc.y > maxY) maxY = loc.y;
+    }
+
+    if (maxX == minX) maxX += 1.0;
+    if (maxY == minY) maxY += 1.0;
+
+    auto toGrid = [&](double x, double y) -> pair<int, int> {
+        int gx = (int)((x - minX) / (maxX - minX) * (WIDTH - 8)) + 3;
+        int gy = (int)((y - minY) / (maxY - minY) * (HEIGHT - 4)) + 1;
+        if (gx < 0) gx = 0;
+        if (gx >= WIDTH) gx = WIDTH - 1;
+        if (gy < 0) gy = 0;
+        if (gy >= HEIGHT) gy = HEIGHT - 1;
+        return {gx, gy};
+    };
+
+    // Draw roads
+    for (int u = 0; u < n; u++) {
+        for (const auto& e : adj[u]) {
+            if (u < e.to || e.isOneWay) {
+                auto p1 = toGrid(locations[u].x, locations[u].y);
+                auto p2 = toGrid(locations[e.to].x, locations[e.to].y);
+
+                int x1 = p1.first, y1 = p1.second;
+                int x2 = p2.first, y2 = p2.second;
+
+                int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+                int dy = -abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
+                int err = dx + dy;
+
+                char roadChar = e.isOpen ? '.' : 'x';
+
+                while (true) {
+                    if (grid[y1][x1] == ' ') {
+                        grid[y1][x1] = roadChar;
+                    }
+                    if (x1 == x2 && y1 == y2) break;
+                    int e2 = 2 * err;
+                    if (e2 >= dy) { err += dy; x1 += sx; }
+                    if (e2 <= dx) { err += dx; y1 += sy; }
+                }
+            }
+        }
+    }
+
+    // Place location nodes with IDs
+    for (const auto& loc : locations) {
+        auto p = toGrid(loc.x, loc.y);
+        string idStr = to_string(loc.id);
+        if (p.first + (int)idStr.length() < WIDTH) {
+            for (size_t i = 0; i < idStr.length(); i++) {
+                grid[p.second][p.first + i] = idStr[i];
+            }
+        }
+    }
+
+    cout << "\n+----------------------------------------------------------------------+\n";
+    cout << "|                     DHAKA UNIVERSITY 2D VISUAL MAP                   |\n";
+    cout << "+----------------------------------------------------------------------+\n";
+    for (int r = 0; r < HEIGHT; r++) {
+        cout << "|" << grid[r] << "|\n";
+    }
+    cout << "+----------------------------------------------------------------------+\n";
+    cout << "Legend: Numbers = Location IDs | . = Open Road | x = Blocked Road\n";
+    cout << "Use option 1 to see Location ID-to-Name directory.\n";
+}
+
 void Graph::showLocations() {
     cout << "\nLocations:\n";
     for (int i = 0; i < n; i++) {

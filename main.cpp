@@ -144,13 +144,14 @@ int main()
 
         cout << "1. View Locations\n";
         cout << "2. View Roads & Speed Limits\n";
-        cout << "3. Shortest Route & ETA (Dijkstra)\n";
-        cout << "4. Shortest Route & ETA (A* Search)\n";
-        cout << "5. Compare Dijkstra vs A*\n";
-        cout << "6. Toggle Road Status (Open / Block)\n";
-        cout << "7. Save Map to File\n";
-        cout << "8. Load Map from File\n";
-        cout << "9. Test Curzon -> Central Library\n";
+        cout << "3. Display 2D Visual Map (Canvas)\n";
+        cout << "4. Shortest Route & ETA (Dijkstra)\n";
+        cout << "5. Shortest Route & ETA (A* Search)\n";
+        cout << "6. Compare Dijkstra vs A*\n";
+        cout << "7. Toggle Road Status (Open / Block)\n";
+        cout << "8. Save Map to File\n";
+        cout << "9. Load Map from File\n";
+        cout << "10. Test Curzon -> Central Library\n";
         cout << "0. Exit\n";
 
         cout << "Choice: ";
@@ -178,10 +179,20 @@ int main()
 
 
         // =================================
-        // 3. DIJKSTRA
+        // 3. 2D VISUAL MAP
         // =================================
 
         else if (choice == 3)
+        {
+            g.showVisualMap();
+        }
+
+
+        // =================================
+        // 4. DIJKSTRA
+        // =================================
+
+        else if (choice == 4)
         {
             int s, d;
 
@@ -196,10 +207,10 @@ int main()
 
 
         // =================================
-        // 4. A*
+        // 5. A*
         // =================================
 
-        else if (choice == 4)
+        else if (choice == 5)
         {
             int s, d;
 
@@ -214,10 +225,10 @@ int main()
 
 
         // =================================
-        // 5. COMPARE
+        // 6. COMPARE
         // =================================
 
-        else if (choice == 5)
+        else if (choice == 6)
         {
             int s, d;
 
@@ -232,10 +243,10 @@ int main()
 
 
         // =================================
-        // 6. ROAD STATUS
+        // 7. ROAD STATUS
         // =================================
 
-        else if (choice == 6)
+        else if (choice == 7)
         {
             int u, v, status;
 
@@ -255,30 +266,30 @@ int main()
 
 
         // =================================
-        // 7. SAVE MAP
+        // 8. SAVE MAP
         // =================================
 
-        else if (choice == 7)
+        else if (choice == 8)
         {
             g.saveFile("map.txt");
         }
 
 
         // =================================
-        // 8. LOAD MAP
+        // 9. LOAD MAP
         // =================================
 
-        else if (choice == 8)
+        else if (choice == 9)
         {
             g.loadFile("map.txt");
         }
 
 
         // =================================
-        // 9. TEST CURZON -> LIBRARY
+        // 10. TEST CURZON -> LIBRARY
         // =================================
 
-        else if (choice == 9)
+        else if (choice == 10)
         {
             cout << "\n=========================================\n";
             cout << "Testing Curzon -> Central Library\n";
