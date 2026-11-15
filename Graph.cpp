@@ -361,11 +361,27 @@ bool Graph::loadFile(string filename) {
     return true;
 }
 
-int Graph::getLocationCount() {
+int Graph::getLocationCount() const {
     return n;
 }
 
-Location Graph::getLocation(int id) {
+Location Graph::getLocation(int id) const {
     if (id >= 0 && id < n) return locations[id];
     return Location();
+}
+
+const vector<Location>& Graph::getAllLocations() const {
+    return locations;
+}
+
+vector<RoadInfo> Graph::getAllRoads() const {
+    vector<RoadInfo> list;
+    for (int u = 0; u < n; u++) {
+        for (const auto& e : adj[u]) {
+            if (e.isOneWay || u < e.to) {
+                list.push_back({u, e.to, e.weight, e.speedLimit, e.isOneWay, e.isOpen});
+            }
+        }
+    }
+    return list;
 }

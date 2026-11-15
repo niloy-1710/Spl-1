@@ -1,12 +1,12 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent) {
+    : QMainWindow(parent), mapCanvas(nullptr) {
     setWindowTitle("Map Navigation System - SPL 1 (IIT DU)");
-    resize(1100, 750);
+    resize(1200, 750);
 
-    setupUI();
     loadSampleData();
+    setupUI();
 }
 
 MainWindow::~MainWindow() {}
@@ -17,27 +17,25 @@ void MainWindow::setupUI() {
 
     mainLayout = new QHBoxLayout(centralWidget);
 
+    // Visual Map Canvas
+    mapCanvas = new MapCanvas(this);
+    mapCanvas->setGraph(&mapGraph);
+    mainLayout->addWidget(mapCanvas, 4); // 80% width
+
     // Control panel sidebar
     controlPanelLayout = new QVBoxLayout();
-    titleLabel = new QLabel("<h2>Map Navigation</h2><p>Dhaka University Campus</p>", this);
+    titleLabel = new QLabel("<h2>Map Navigation</h2><p><b>Dhaka University Campus</b></p>", this);
     controlPanelLayout->addWidget(titleLabel);
 
     controlPanelLayout->addStretch();
+    mainLayout->addLayout(controlPanelLayout, 1); // 20% width
 
-    // Placeholder for map display area (will become MapCanvas in next commit)
-    QLabel* placeholder = new QLabel("Map View Canvas\n(Visual interactive map of DU Campus)", this);
-    placeholder->setAlignment(Qt::AlignCenter);
-    placeholder->setStyleSheet("background-color: #f7f9fb; border: 2px dashed #b0b8c4; font-size: 16px; border-radius: 8px; color: #555;");
-
-    mainLayout->addWidget(placeholder, 3); // 75% width
-    mainLayout->addLayout(controlPanelLayout, 1); // 25% width
-
-    statusBar()->showMessage("System Ready | 24 Locations Loaded from map.txt");
+    statusBar()->showMessage(QString("System Ready | %1 Locations Loaded").arg(mapGraph.getLocationCount()));
 }
 
 void MainWindow::loadSampleData() {
     if (!mapGraph.loadFile("map.txt")) {
-        // Fallback default landmarks if map.txt is not found
+        // Fallback default landmarks
         mapGraph.addLocation("IIT", 250, 300);
         mapGraph.addLocation("Curzon", 380, 200);
         mapGraph.addLocation("TSC", 150, 120);

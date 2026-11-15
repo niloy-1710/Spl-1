@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QStatusBar>
 #include "Graph.h"
+#include "MapCanvas.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -18,6 +19,7 @@ private:
     QHBoxLayout* mainLayout;
     QVBoxLayout* controlPanelLayout;
     QLabel* titleLabel;
+    MapCanvas* mapCanvas;
 
     void setupUI();
     void loadSampleData();
@@ -28,4 +30,3 @@ public:
 };
 
 #endif
-

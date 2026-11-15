@@ -9,12 +9,13 @@ TEMPLATE = app
 SOURCES += \
     main_gui.cpp \
     MainWindow.cpp \
+    MapCanvas.cpp \
     Graph.cpp \
     MinHeap.cpp
 
 HEADERS += \
     MainWindow.h \
+    MapCanvas.h \
     Graph.h \
     MinHeap.h \
     Location.h
-

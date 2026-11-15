@@ -20,6 +20,15 @@ struct Edge {
     bool isOpen;       // false if blocked
 };
 
+struct RoadInfo {
+    int u;
+    int v;
+    double weight;
+    double speedLimit;
+    bool isOneWay;
+    bool isOpen;
+};
+
 struct RouteSegment {
     int from;
     int to;
@@ -63,8 +72,11 @@ public:
     void showRoads();
     bool saveFile(string filename);
     bool loadFile(string filename);
-    int getLocationCount();
-    Location getLocation(int id);
+    
+    int getLocationCount() const;
+    Location getLocation(int id) const;
+    const vector<Location>& getAllLocations() const;
+    vector<RoadInfo> getAllRoads() const;
 };
 
 #endif

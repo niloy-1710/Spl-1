@@ -15,6 +15,8 @@ set(PROJECT_SOURCES
     main_gui.cpp
     MainWindow.cpp
     MainWindow.h
+    MapCanvas.cpp
+    MapCanvas.h
     Graph.cpp
     Graph.h
     MinHeap.cpp
@@ -29,4 +31,3 @@ target_link_libraries(MapNavigation PRIVATE
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
 )
-
